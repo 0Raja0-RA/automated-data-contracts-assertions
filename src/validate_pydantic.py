@@ -4,7 +4,7 @@ from contract import OrderContract
 
 valid_order = {
     "order_id": "ORD-001",
-    "customer_id": 101,
+    "customer_id": -101,
     "amount": 250000.0,
     "status": "PAID",
     "transaction_date": datetime(2026, 9, 20, 8, 0),
