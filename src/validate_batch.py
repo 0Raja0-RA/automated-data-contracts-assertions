@@ -46,9 +46,12 @@ def validate_batch(rows):
             )
     return valid_orders, errors
 
-rows = load_orders("../data/orders_valid.csv")
+rows = load_orders("../data/orders_invalid.csv")
 valid_orders, errors = validate_batch(rows)
 
 print(f"Jumlah record : {len(rows)}")
 print(f"Valid         : {len(valid_orders)}")
 print(f"Invalid       : {len(errors)}")
+
+for error in errors:
+    print(error)
