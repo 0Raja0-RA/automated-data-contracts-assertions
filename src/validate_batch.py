@@ -46,12 +46,61 @@ def validate_batch(rows):
             )
     return valid_orders, errors
 
-rows = load_orders("../data/orders_invalid.csv")
+def save_to_warehouse(orders, output_path):
+    with open(
+        output_path,
+        "w",
+        newline="",
+        encoding="utf-8",
+    ) as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            [
+                "order_id",
+                "customer_id",
+                "amount",
+                "status",
+                "transaction_date",
+                "payment_date",
+            ]
+        )
+
+        for order in orders:
+            writer.writerow(
+                [
+                    order.order_id,
+                    order.customer_id,
+                    order.amount,
+                    order.status,
+                    order.transaction_date.isoformat(),
+                    (
+                        order.payment_date.isoformat()
+                        if order.payment_date
+                        else ""
+                    ),
+                ]
+            )
+
+rows = load_orders("../data/orders_valid.csv")
 valid_orders, errors = validate_batch(rows)
 
 print(f"Jumlah record : {len(rows)}")
 print(f"Valid         : {len(valid_orders)}")
 print(f"Invalid       : {len(errors)}")
 
-for error in errors:
-    print(error)
+if errors:
+    print("FAIL-FAST: BATCH DITOLAK")
+
+    for error in errors:
+        print(error)
+
+    raise SystemExit(1)
+
+print("BATCH VALID")
+
+save_to_warehouse(
+    valid_orders,
+    "../data/warehouse_orders.csv",
+)
+
+print("Batch berhasil dimuat ke Data Warehouse.")
