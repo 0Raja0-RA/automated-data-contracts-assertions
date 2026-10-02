@@ -1,4 +1,5 @@
 import csv
+import sys
 from datetime import datetime
 from pydantic import ValidationError
 from contract import OrderContract
@@ -81,7 +82,9 @@ def save_to_warehouse(orders, output_path):
                 ]
             )
 
-rows = load_orders("../data/orders_valid.csv")
+input_path = sys.argv[1] if len(sys.argv) > 1 else "../data/orders_valid.csv"
+rows = load_orders(input_path)
+
 valid_orders, errors = validate_batch(rows)
 
 print(f"Jumlah record : {len(rows)}")
@@ -102,5 +105,4 @@ save_to_warehouse(
     valid_orders,
     "../data/warehouse_orders.csv",
 )
-
 print("Batch berhasil dimuat ke Data Warehouse.")
